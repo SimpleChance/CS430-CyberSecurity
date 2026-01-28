@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="33cf77e6-b08f-4309-8d91-aaf8b501d550" name="Changes" comment="Encrypt method">
+    <list default="true" id="33cf77e6-b08f-4309-8d91-aaf8b501d550" name="Changes" comment="Full encryption + some fixes">
+      <change afterPath="$PROJECT_DIR$/Assignment1/cryptomaticFast.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assignment1/Encrypted/LincolnEncrypted.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment1/Encrypted/ConstitutionEncrypted.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assignment1/Lincoln.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment1/Lincoln.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment1/Encrypted/ConstitutionEncrypted.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment1/Encrypted/Lincoln2.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment1/Encrypted/MyLincolnEncrypted.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment1/Encrypted/encrypted-xl.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment1/Encrypted/Lincoln1-xl.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assignment1/cryptomatic.py" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment1/cryptomatic.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -25,9 +27,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="38mFwHt5OqIQcaE3ZimhCrDonnn" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -39,6 +41,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Python.cryptomatic.executor": "Run",
+    "Python.cryptomaticFast.executor": "Run",
     "Python.test.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -52,7 +55,7 @@
       <recent name="C:\Users\cwjew\Documents\Python Projects\CS430" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.cryptomaticFast">
     <configuration name="cryptomatic" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CS430" />
       <option name="ENV_FILES" value="" />
@@ -75,8 +78,31 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="cryptomaticFast" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="CS430" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Assignment1" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Assignment1/cryptomaticFast.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.cryptomaticFast" />
         <item itemvalue="Python.cryptomatic" />
       </list>
     </recent_temporary>
@@ -129,7 +155,23 @@
       <option name="project" value="LOCAL" />
       <updated>1769401758937</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Full encryption + some fixes">
+      <option name="closed" value="true" />
+      <created>1769414352147</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1769414352147</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Full encryption + some fixes">
+      <option name="closed" value="true" />
+      <created>1769414362725</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1769414362725</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -147,6 +189,7 @@
     <MESSAGE value="init" />
     <MESSAGE value="Setup" />
     <MESSAGE value="Encrypt method" />
-    <option name="LAST_COMMIT_MESSAGE" value="Encrypt method" />
+    <MESSAGE value="Full encryption + some fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Full encryption + some fixes" />
   </component>
 </project>
