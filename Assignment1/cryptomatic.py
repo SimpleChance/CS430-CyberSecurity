@@ -6,6 +6,7 @@ Bruteforce algorithm to generate a 2-character key given an encrypted message.
 """
 
 
+import os
 import time
 import re
 from tqdm import tqdm
@@ -117,11 +118,14 @@ def main():
             print("\nEnter an output filename:")
             outputfile = input()
 
+            path = "Encrypted/" + outputfile
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+
             # I was having problems with spaces and newlines getting corrupted,
             # so I use 'wb' to write bytes directly to the file instead of text
-            with open("Encrypted/" + outputfile, "wb") as f:
+            with open(path, "wb") as f:
                 f.write(encrypted)
-            print("Saved encrypted message to ", "Encrypted/" + outputfile)
+            print(f"Saved encrypted message to {path}")
 
         case 2:
             print("\nEnter a file name and 2-character code separated by a space. (i.e. input.txt ab")
@@ -143,10 +147,14 @@ def main():
 
             print("\nEnter an output filename:")
             outputfile = input()
-            with open("Decrypted/" + outputfile, "w", encoding="utf-8") as f:
+
+            path = "Decrypted/" + outputfile
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+
+            with open(path, "w", encoding="utf-8") as f:
                 f.write(decrypted_text)
 
-            print(f"Saved decrypted message to Decrypted/{outputfile}")
+            print(f"Saved decrypted message to {path}")
 
         case 3:
             print("\nEnter a file name: (i.e. encrypted.txt):")
@@ -176,12 +184,15 @@ def main():
             print("\nEnter an output filename:")
             outputfile = input()
 
-            with open("Bruteforce/" + outputfile, "w", encoding="utf-8") as f:
+            path = "Bruteforce/" + outputfile
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+
+            with open(path, "w", encoding="utf-8") as f:
                 f.write(f"Brute-force completed in {elapsed:.3f} seconds")
                 f.write(f"\nKey:{key_text}")
                 f.write(f"\nDecrypted message:\n{decrypted_text}")
 
-            print(f"Saved bruteforce decrypted message and key to Bruteforce/{outputfile}")
+            print(f"Saved bruteforce decrypted message and key to {path}")
 
         case _:
             return
