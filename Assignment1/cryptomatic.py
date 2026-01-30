@@ -42,7 +42,7 @@ def score_text(pt: bytes, dictionary: set, common_words: set) -> int:
 
     length = len(pt)
 
-    # Printable ASCII ratio
+    # Printable ASCII ratio (prunes unlikely candidates early)
     printable = sum(32 <= b <= 126 for b in pt)
     printable_ratio = printable / length
     if printable_ratio < 0.9:
@@ -54,7 +54,7 @@ def score_text(pt: bytes, dictionary: set, common_words: set) -> int:
 
     text = pt.decode("latin-1").lower()  # Decode safely for word analysis
 
-    score += pt.count(b' ') * 3  # Reward spaces heavily
+    score += pt.count(b' ') * 3  # Reward spaces heavily (I was having an issue where the correct key was found, but in the wrong case (t vs T)... causing the output to *look* good (contains valid words), but spaces, newlines, and certain punctuations would be corrupted. This was my workaround.)
 
     words = re.findall(r'[a-z]+', text)  # Extract words
 
@@ -89,9 +89,9 @@ def brute_force(ciphertext: bytes, dictionary: set, common_words: set):
 
 
 def main():
-    print("Assignment1 - Crpytomatic \n \n")
+    print("Assignment1 - Cryptomatic\n\n")
     print("Please Enter 1, 2, or 3 to make a selection:\n")
-    print("1. Encrypt \n2. Decrypt \n3. Bruteforce")
+    print("1. Encrypt\n2. Decrypt\n3. Bruteforce")
 
     i = int(input())
 
@@ -109,7 +109,7 @@ def main():
                 input_text = file.read()
 
             encrypted = encryptdecrypt(input_text, key)  # encrypt the message
-            encrypted_text = encrypted.decode("utf-8", errors="replace")
+            encrypted_text = encrypted.decode("utf-8", errors="replace")  # decode the bytes back into utf-8 characters for printing
 
             print("\nEncrypted message:")
             print(encrypted_text)
@@ -117,6 +117,8 @@ def main():
             print("\nEnter an output filename:")
             outputfile = input()
 
+            # I was having problems with spaces and newlines getting corrupted,
+            # so I use 'wb' to write bytes directly to the file instead of text
             with open("Encrypted/" + outputfile, "wb") as f:
                 f.write(encrypted)
             print("Saved encrypted message to ", "Encrypted/" + outputfile)
