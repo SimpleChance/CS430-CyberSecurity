@@ -134,7 +134,7 @@ The program will attempt all possible 2-character keys, display the best result,
 ---
 
 ## Final Notes
-- cryptomaticFast.py is a faster version of the bruteforce algorithm in cryptomatic.py. It uses translation tables to perform XOR on the key and message all at once. It does not use re.findall() to match with dictionary words and common words which is O(n), and instead skips this step entirely. It also does not use tqdm to track loop progress. This file was created with the help of AI.
+cryptomaticFast.py is a faster version of the bruteforce algorithm in cryptomatic.py. It uses translation tables to perform XOR on the key and message all at once. It does not use re.findall() to match with dictionary words and common words which is O(n), and instead skips this step entirely. It also does not use tqdm to track loop progress. This file was created with the help of AI.
 
 
 ## Author
