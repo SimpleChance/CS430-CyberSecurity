@@ -9,11 +9,14 @@ import java.util.List;
 public class bf_jcrypt {
     
     /* Data Structures */
+
+    /* class to track user data */
     static class UserEntry {
         String username;
         String salt;
         String hash;
     }
+    /* OpCode enum for elementary operators */
     enum OpCode {
         IDENTITY,
         // case ops
@@ -37,6 +40,7 @@ public class bf_jcrypt {
         // replace
         REPLACE
     }
+    /* Operation class to construct each operator */
     static class Operation {
         OpCode code;
         String strArg;
@@ -62,7 +66,7 @@ public class bf_jcrypt {
     static final String LOWERCASE_CHARS = "abcdefghijklmnopqrstuvwxyz";
     static final String SPECIALS = "!@#$%^&*()-_+=~/`[]{}|:;\"'<>,.?\\\\";
     static final String UPPERCASE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    /* Maximum password length (known constraint) */
+    /* Maximum password length (known constraint) should be 8 but I was missing hits with any length less than 10 */
     static final int MAX_PASS_LEN = 12;
 
     enum Rule {
@@ -158,7 +162,6 @@ public class bf_jcrypt {
         LEET_S(
             new Operation(OpCode.REPLACE, 's', '$')
         );
-        
 
         final List<Operation> operations = new ArrayList<>();
 
@@ -168,33 +171,26 @@ public class bf_jcrypt {
             }
         }
     }
-    
+
+    /* List of rule chains to apply multiple rules to the same candidate */
     static final Rule[][] RULE_CHAINS = {
 
-        /* =====================================================
-        * 0. No modification (baseline)
-        * ===================================================== */
+        /* 0. No modification (baseline) */
         { Rule.IDENTITY },
 
-        /* =====================================================
-        * 1. Case normalization (VERY high yield)
-        * ===================================================== */
+        /* 1. Case normalization (VERY high yield) */
         { Rule.LOWERCASE_ALL },
         { Rule.CAPITALIZE_ALL },
         { Rule.CAPITALIZE_FIRST },
         { Rule.NCAPITALIZE },
         { Rule.TOGGLE_CASE },
 
-        /* =====================================================
-        * 2. Single digit suffix / prefix
-        * ===================================================== */
+        /* 2. Single digit suffix / prefix */
         { Rule.LOWERCASE_ALL, Rule.APPEND_DIGIT },
         { Rule.CAPITALIZE_FIRST, Rule.APPEND_DIGIT },
         { Rule.LOWERCASE_ALL, Rule.PREPEND_DIGIT },
 
-        /* =====================================================
-        * 3. Multi digit suffix and prefix (birth years, repeats)
-        * ===================================================== */
+        /* 3. Multi digit suffix and prefix (birth years, repeats) */
         { Rule.LOWERCASE_ALL, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT },
         { Rule.CAPITALIZE_FIRST, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT },
         { Rule.LOWERCASE_ALL, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT },
@@ -206,37 +202,27 @@ public class bf_jcrypt {
         { Rule.LOWERCASE_ALL, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT },
         { Rule.CAPITALIZE_FIRST, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT },
 
-        /* =====================================================
-        * 3b. Reversed + digit suffix
-        * ===================================================== */
+        /* 3b. Reversed + digit suffix */
         { Rule.REVERSE, Rule.APPEND_DIGIT },
         { Rule.REVERSE, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT },
 
-        /* =====================================================
-        * 3c. Deleted last char + digit suffix
-        * ===================================================== */
+        /* 3c. Deleted last char + digit suffix */
         { Rule.DELETE_LAST, Rule.APPEND_DIGIT },
         { Rule.DELETE_LAST, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT },
 
-        /* =====================================================
-        * 3d. Special char + digit suffix
-        * ===================================================== */
+        /* 3d. Special char + digit suffix */
         { Rule.CAPITALIZE_FIRST, Rule.APPEND_SPECIAL, Rule.APPEND_DIGIT },
         { Rule.LOWERCASE_ALL, Rule.APPEND_SPECIAL, Rule.APPEND_DIGIT },
         { Rule.CAPITALIZE_FIRST, Rule.APPEND_DIGIT, Rule.APPEND_SPECIAL },
         { Rule.LOWERCASE_ALL, Rule.APPEND_DIGIT, Rule.APPEND_SPECIAL },
 
 
-        /* =====================================================
-        * 4. Common symbol suffix / prefix
-        * ===================================================== */
+        /* 4. Common symbol suffix / prefix */
         { Rule.LOWERCASE_ALL, Rule.APPEND_SPECIAL },
         { Rule.CAPITALIZE_FIRST, Rule.APPEND_SPECIAL },
         { Rule.LOWERCASE_ALL, Rule.PREPEND_SPECIAL },
 
-        /* =====================================================
-        * 5. Leetspeak (branching replacements)
-        * ===================================================== */
+        /* 5. Leetspeak (branching replacements) */
         { Rule.LOWERCASE_ALL, Rule.LEET_A },
         { Rule.LOWERCASE_ALL, Rule.LEET_E },
         { Rule.LOWERCASE_ALL, Rule.LEET_O },
@@ -248,23 +234,16 @@ public class bf_jcrypt {
         { Rule.LOWERCASE_ALL, Rule.LEET_A, Rule.LEET_S, Rule.LEET_E, Rule.LEET_O },
         { Rule.LEET_A, Rule.LEET_S, Rule.LEET_E, Rule.LEET_O, Rule.LOWERCASE_ALL },
 
-
-        /* =====================================================
-        * 6. Case + leet + digit (very common in assignments)
-        * ===================================================== */
+        /* 6. Case + leet + digit (very common in assignments) */
         { Rule.CAPITALIZE_FIRST, Rule.LEET_A, Rule.APPEND_DIGIT },
         { Rule.CAPITALIZE_FIRST, Rule.LEET_S, Rule.APPEND_DIGIT },
 
-        /* =====================================================
-        * 7. Structural edits
-        * ===================================================== */
+        /* 7. Structural edits */
         { Rule.DELETE_FIRST },
         { Rule.DELETE_LAST },
         { Rule.REVERSE },
 
-        /* =====================================================
-        * 8. Duplication & reflection
-        * ===================================================== */
+        /* 8. Duplication & reflection */
         { Rule.DUPLICATE },
         { Rule.DUPLICATE, Rule.REVERSE },
         { Rule.DUPLICATE, Rule.APPEND_DIGIT },
@@ -274,9 +253,7 @@ public class bf_jcrypt {
         { Rule.REFLECT_FRONT, Rule.APPEND_DIGIT },
 
 
-        /* =====================================================
-        * 9. Exotic / low probability (kept last)
-        * ===================================================== */
+        /* 9. Exotic / low probability (kept last) basically I'm just grasping for straws here*/
         { Rule.TOGGLE_CASE, Rule.APPEND_DIGIT },
         { Rule.NCAPITALIZE, Rule.APPEND_SPECIAL },
 
@@ -337,7 +314,7 @@ public class bf_jcrypt {
         return words;
     }
 
-    /* Rule Engine */
+    /* Rule Engine (where operator logic lives) */
     static List<String> applyOperationToList(List<String> inputs, Operation op) {
         List<String> outputs = new ArrayList<>();
         switch (op.code) {
@@ -466,7 +443,7 @@ public class bf_jcrypt {
             default:
                 throw new IllegalStateException("Unknown opcode");
         }
-        // Safety: remove any variant that (somehow) exceeds the max length
+        // remove any variant that (somehow) exceeds the max length
         outputs.removeIf(s -> s.length() > MAX_PASS_LEN);
         return outputs;
     }
@@ -523,11 +500,12 @@ public class bf_jcrypt {
                 // for each candidate in the dictionary
                 for (String candidate : dictionary) {
 
-                    // for each rule chain in the set of rule chains
+                    // for each rule chain in the list of rule chains
                     for (Rule[] chain : RULE_CHAINS) {
 
                         List<String> variants = applyRuleChain(candidate, chain);
 
+                        /* for each candidate variant produced */
                         for (String modifiedCandidate : variants) {
                             String candidateToHash = modifiedCandidate;
                             if (candidateToHash.length() > MAX_PASS_LEN) {
@@ -553,6 +531,7 @@ public class bf_jcrypt {
                     }
                     if (cracked) break;
                 }
+                /* catch unbroken passwords */
                 if (!cracked) {
                     System.out.println(
                         "[NOT CRACKED] " + user.username

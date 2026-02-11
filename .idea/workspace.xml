@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="33cf77e6-b08f-4309-8d91-aaf8b501d550" name="Changes" comment="trivial">
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/CS430.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CS430.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="33cf77e6-b08f-4309-8d91-aaf8b501d550" name="Changes" comment="REAMDME.md added">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2/bf_jcrypt.java" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2/bf_jcrypt.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +66,7 @@
       <recent name="C:\Users\cwjew\Documents\Python Projects\CS430" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.cryptomatic">
+  <component name="RunManager">
     <configuration name="cryptomatic" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CS430" />
       <option name="ENV_FILES" value="" />
@@ -200,7 +198,23 @@
       <option name="project" value="LOCAL" />
       <updated>1769749656822</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="REAMDME.md added">
+      <option name="closed" value="true" />
+      <created>1769823981505</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1769823981505</updated>
+    </task>
+    <task id="LOCAL-00010" summary="REAMDME.md added">
+      <option name="closed" value="true" />
+      <created>1769824041563</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1769824041563</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -220,6 +234,7 @@
     <MESSAGE value="Encrypt method" />
     <MESSAGE value="Full encryption + some fixes" />
     <MESSAGE value="trivial" />
-    <option name="LAST_COMMIT_MESSAGE" value="trivial" />
+    <MESSAGE value="REAMDME.md added" />
+    <option name="LAST_COMMIT_MESSAGE" value="REAMDME.md added" />
   </component>
 </project>
