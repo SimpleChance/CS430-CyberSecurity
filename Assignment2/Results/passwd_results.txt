@@ -1,22 +1,22 @@
-michael:tremors:11.024
-abigail:Saxon:7.953
-samantha:<not found>:10.414
-tyler:eltneg:4.016
-alexander:<not found>:10.348
-james:enchant$0:3.244
-benjamin:soozzoos:10.124
-morgan:dIAMETER:2.701
-jennifer:ElmerJ:10.199
-nicole:INDIGNITY:4.737
-evan:^bribed:1.350
-jack:ellows:10.091
-victor:<not found>:10.299
-caleb:zoossooz:10.063
-nathan:<not found>:10.276
-connor:<not found>:10.299
-rachel:<not found>:10.322
-dustin:Swine3:8.984
-maria:<not found>:10.222
-paige:<not found>:10.597
+michael:tremors:0.012
+abigail:Saxon:0.005
+samantha:<not found>:59.062
+tyler:eltneg:2.969
+alexander:<not found>:59.126
+james:enchant$0:1.531
+benjamin:soozzoos:2.782
+morgan:dIAMETER:0.005
+jennifer:ElmerJ:0.002
+nicole:INDIGNITY:0.004
+evan:^bribed:2.612
+jack:ellows:2.759
+victor:<not found>:58.752
+caleb:zoossooz:2.842
+nathan:<not found>:58.693
+connor:<not found>:63.268
+rachel:<not found>:62.288
+dustin:Swine3:0.042
+maria:<not found>:63.519
+paige:<not found>:61.072
 Cracked 12 out of 20 users. (60.0%)
-Total time: 167.326s
+Total time: 501.423s

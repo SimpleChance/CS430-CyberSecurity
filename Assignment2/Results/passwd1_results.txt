@@ -1,22 +1,22 @@
-michael:michael:10.377
-abigail:<not found>:10.030
-samantha:amazing:0.376
-tyler:eeffoc:1.820
-alexander:squadro:8.201
-james:icious:9.234
-benjamin:abort6:0.027
-morgan:rdoctor:2.839
-jennifer:doorrood:2.857
-nicole:keyskeys:4.898
-evan:Impact:4.379
-jack:sATCHEL:7.566
-victor:THIRTY:9.059
-caleb:<not found>:10.241
-nathan:<not found>:10.407
-connor:enoggone:4.190
-rachel:obliqu3:6.268
-dustin:<not found>:10.232
-maria:Salizar:9.905
-paige:<not found>:10.368
+michael:michael:0.024
+abigail:<not found>:92.486
+samantha:amazing:0.000
+tyler:eeffoc:5.059
+alexander:squadro:5.018
+james:icious:5.050
+benjamin:abort6:0.014
+morgan:rdoctor:7.268
+jennifer:doorrood:5.145
+nicole:keyskeys:5.012
+evan:Impact:0.009
+jack:sATCHEL:0.012
+victor:THIRTY:0.010
+caleb:<not found>:108.900
+nathan:<not found>:121.481
+connor:enoggone:5.133
+rachel:obliqu3:1.680
+dustin:<not found>:111.766
+maria:Salizar:0.003
+paige:<not found>:61.728
 Cracked 15 out of 20 users. (75.0%)
-Total time: 133.337s
+Total time: 535.933s
