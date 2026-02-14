@@ -1,46 +1,78 @@
+/*
+bf_jcrypt.java
+
+Rule-based password cracking tool built around the Unix DES crypt() algorithm.
+
+Loads a password file, extends a dictionary with user name data,
+applies structured mutation rule chains, and compares generated
+candidates against stored hashes using jcrypt.
+
+CS340 - Password Cracking Assignment
+*/
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class bf_jcrypt {
-    
+
     /* Data Structures */
 
-    /* class to track user data */
+    /*
+    Represents a single user entry from the password file.
+    Stores username, name components, salt, and full hash.
+    */
     static class UserEntry {
         String username;
+        String firstname;
+        String lastname;
         String salt;
         String hash;
     }
-    /* OpCode enum for elementary operators */
+
+
+    /*
+    Enumeration of all supported mutation operations.
+    */
     enum OpCode {
         IDENTITY,
-        // case ops
+
+        /* Case transformations */
         LOWERCASE_ALL,
         CAPITALIZE_FIRST,
         CAPITALIZE_ALL,
         NCAPITALIZE,
         TOGGLE_CASE,
-        // structural ops
+
+        /* Structural operations */
         REVERSE,
         DUPLICATE,
         REFLECT_FRONT,
         REFLECT_BACK,
-        // delete ops
+
+        /* Deletion operations */
         DELETE_FIRST,
         DELETE_LAST,
-        // charset ops
+
+        /* Charset-based expansions */
         APPEND_CHARSET,
         PREPEND_CHARSET,
         INSERT_CHARSET,
-        // replace
+
+        /* Character replacement */
         REPLACE
     }
-    /* Operation class to construct each operator */
+
+
+    /*
+    Represents a single mutation operation.
+    Some operations require additional arguments
+    (e.g., character sets or replacement characters).
+    */
     static class Operation {
         OpCode code;
         String strArg;
@@ -50,10 +82,12 @@ public class bf_jcrypt {
         Operation(OpCode code){
             this.code = code;
         }
+
         Operation(OpCode code, String strArg) {
             this.code = code;
             this.strArg = strArg;
         }
+
         Operation(OpCode code, char from, char to) {
             this.code = code;
             this.charArg1 = from;
@@ -61,107 +95,62 @@ public class bf_jcrypt {
         }
     }
 
-    /* Character sets used by charset operations */
+
+    /* Character sets used for expansion rules */
+
     static final String DIGITS = "0123456789";
     static final String LOWERCASE_CHARS = "abcdefghijklmnopqrstuvwxyz";
     static final String SPECIALS = "!@#$%^&*()-_+=~/`[]{}|:;\"'<>,.?\\\\";
     static final String UPPERCASE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    /* Maximum password length (known constraint) should be 8 but I was missing hits with any length less than 10 */
-    static final int MAX_PASS_LEN = 12;
 
+
+    /*
+    Rule represents a sequence of operations.
+    Multiple rules are combined into rule chains.
+    */
     enum Rule {
-        /* Rules for password mutations (Need to update)*/
 
-        IDENTITY(
-            new Operation(OpCode.IDENTITY)
-        ),
-        LOWERCASE_ALL(
-            new Operation(OpCode.LOWERCASE_ALL)
-        ),
-        CAPITALIZE_FIRST(
-            new Operation(OpCode.CAPITALIZE_FIRST)
-        ),
-        CAPITALIZE_ALL(
-            new Operation(OpCode.CAPITALIZE_ALL)
-        ),
-        NCAPITALIZE(
-            new Operation(OpCode.NCAPITALIZE)
-        ),
-        TOGGLE_CASE(
-            new Operation(OpCode.TOGGLE_CASE)
-        ),
-        REVERSE(
-            new Operation(OpCode.REVERSE)
-        ),
-        DUPLICATE(
-            new Operation(OpCode.DUPLICATE)
-        ),
-        REFLECT_FRONT(
-            new Operation(OpCode.REFLECT_FRONT)
-        ),
-        REFLECT_BACK(
-            new Operation(OpCode.REFLECT_BACK)
-        ),
-        DELETE_FIRST(
-            new Operation(OpCode.DELETE_FIRST)
-        ),
+        /* Baseline */
+        IDENTITY(new Operation(OpCode.IDENTITY)),
 
-        DELETE_LAST(
-            new Operation(OpCode.DELETE_LAST)
-        ),
-        /* Charset-based rules (create many variants) */
-        // append
-        APPEND_LOWER(
-            new Operation(OpCode.APPEND_CHARSET, LOWERCASE_CHARS)
-        ),
-        APPEND_UPPER(
-            new Operation(OpCode.APPEND_CHARSET, UPPERCASE_CHARS)
-        ),
-        APPEND_SPECIAL(
-            new Operation(OpCode.APPEND_CHARSET, SPECIALS)
-        ),
-        APPEND_DIGIT(
-            new Operation(OpCode.APPEND_CHARSET, DIGITS)
-        ),
-        // prepend
-        PREPEND_LOWER(
-            new Operation(OpCode.PREPEND_CHARSET, LOWERCASE_CHARS)
-        ),
-        PREPEND_UPPER(
-            new Operation(OpCode.PREPEND_CHARSET, UPPERCASE_CHARS)
-        ),
-        PREPEND_SPECIAL(
-            new Operation(OpCode.PREPEND_CHARSET, SPECIALS)
-        ),
-        PREPEND_DIGIT(
-            new Operation(OpCode.PREPEND_CHARSET, DIGITS)
-        ),
-        // insert
-        INSERT_LOWER(
-            new Operation(OpCode.INSERT_CHARSET, LOWERCASE_CHARS)
-        ),
-        INSERT_UPPER(
-            new Operation(OpCode.INSERT_CHARSET, UPPERCASE_CHARS)
-        ),
-        INSERT_DIGIT(
-            new Operation(OpCode.INSERT_CHARSET, DIGITS)
-        ),
-        INSERT_SPECIAL(
-            new Operation(OpCode.INSERT_CHARSET, SPECIALS)
-        ),
-        /* Leetspeak / common replacements */
-        LEET_A(
-            new Operation(OpCode.REPLACE, 'a', '@')
-        ),
-        LEET_O(
-            new Operation(OpCode.REPLACE, 'o', '0')
-        ),
-        LEET_E(
-            new Operation(OpCode.REPLACE, 'e', '3')
-        ),
-        LEET_S(
-            new Operation(OpCode.REPLACE, 's', '$')
-        );
+        /* Case operations */
+        LOWERCASE_ALL(new Operation(OpCode.LOWERCASE_ALL)),
+        CAPITALIZE_FIRST(new Operation(OpCode.CAPITALIZE_FIRST)),
+        CAPITALIZE_ALL(new Operation(OpCode.CAPITALIZE_ALL)),
+        NCAPITALIZE(new Operation(OpCode.NCAPITALIZE)),
+        TOGGLE_CASE(new Operation(OpCode.TOGGLE_CASE)),
+
+        /* Structural operations */
+        REVERSE(new Operation(OpCode.REVERSE)),
+        DUPLICATE(new Operation(OpCode.DUPLICATE)),
+        REFLECT_FRONT(new Operation(OpCode.REFLECT_FRONT)),
+        REFLECT_BACK(new Operation(OpCode.REFLECT_BACK)),
+
+        /* Deletions */
+        DELETE_FIRST(new Operation(OpCode.DELETE_FIRST)),
+        DELETE_LAST(new Operation(OpCode.DELETE_LAST)),
+
+        /* Charset expansions */
+        APPEND_LOWER(new Operation(OpCode.APPEND_CHARSET, LOWERCASE_CHARS)),
+        APPEND_UPPER(new Operation(OpCode.APPEND_CHARSET, UPPERCASE_CHARS)),
+        APPEND_SPECIAL(new Operation(OpCode.APPEND_CHARSET, SPECIALS)),
+        APPEND_DIGIT(new Operation(OpCode.APPEND_CHARSET, DIGITS)),
+
+        PREPEND_LOWER(new Operation(OpCode.PREPEND_CHARSET, LOWERCASE_CHARS)),
+        PREPEND_UPPER(new Operation(OpCode.PREPEND_CHARSET, UPPERCASE_CHARS)),
+        PREPEND_SPECIAL(new Operation(OpCode.PREPEND_CHARSET, SPECIALS)),
+        PREPEND_DIGIT(new Operation(OpCode.PREPEND_CHARSET, DIGITS)),
+
+        INSERT_LOWER(new Operation(OpCode.INSERT_CHARSET, LOWERCASE_CHARS)),
+        INSERT_UPPER(new Operation(OpCode.INSERT_CHARSET, UPPERCASE_CHARS)),
+        INSERT_DIGIT(new Operation(OpCode.INSERT_CHARSET, DIGITS)),
+        INSERT_SPECIAL(new Operation(OpCode.INSERT_CHARSET, SPECIALS)),
+
+        /* Leetspeak replacements */
+        LEET_A(new Operation(OpCode.REPLACE, 'a', '@')),
+        LEET_O(new Operation(OpCode.REPLACE, 'o', '0')),
+        LEET_E(new Operation(OpCode.REPLACE, 'e', '3')),
+        LEET_S(new Operation(OpCode.REPLACE, 's', '$'));
 
         final List<Operation> operations = new ArrayList<>();
 
@@ -172,24 +161,27 @@ public class bf_jcrypt {
         }
     }
 
-    /* List of rule chains to apply multiple rules to the same candidate */
-    static final Rule[][] RULE_CHAINS = {
 
+    /*
+    Ordered rule chains applied to each dictionary candidate.
+    Rules are grouped by likelihood and expansion cost.
+    */
+    static final Rule[][] RULE_CHAINS = {
         /* 0. No modification (baseline) */
         { Rule.IDENTITY },
-
-        /* 1. Case normalization (VERY high yield) */
+        
+        /* 1. Case normalization */
         { Rule.LOWERCASE_ALL },
         { Rule.CAPITALIZE_ALL },
         { Rule.CAPITALIZE_FIRST },
         { Rule.NCAPITALIZE },
         { Rule.TOGGLE_CASE },
-
+        
         /* 2. Single digit suffix / prefix */
         { Rule.LOWERCASE_ALL, Rule.APPEND_DIGIT },
         { Rule.CAPITALIZE_FIRST, Rule.APPEND_DIGIT },
         { Rule.LOWERCASE_ALL, Rule.PREPEND_DIGIT },
-
+        
         /* 3. Multi digit suffix and prefix (birth years, repeats) */
         { Rule.LOWERCASE_ALL, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT },
         { Rule.CAPITALIZE_FIRST, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT },
@@ -201,42 +193,40 @@ public class bf_jcrypt {
         { Rule.CAPITALIZE_FIRST, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT },
         { Rule.LOWERCASE_ALL, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT },
         { Rule.CAPITALIZE_FIRST, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT },
-
         /* 3b. Reversed + digit suffix */
         { Rule.REVERSE, Rule.APPEND_DIGIT },
         { Rule.REVERSE, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT },
-
         /* 3c. Deleted last char + digit suffix */
         { Rule.DELETE_LAST, Rule.APPEND_DIGIT },
         { Rule.DELETE_LAST, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT },
-
         /* 3d. Special char + digit suffix */
         { Rule.CAPITALIZE_FIRST, Rule.APPEND_SPECIAL, Rule.APPEND_DIGIT },
         { Rule.LOWERCASE_ALL, Rule.APPEND_SPECIAL, Rule.APPEND_DIGIT },
         { Rule.CAPITALIZE_FIRST, Rule.APPEND_DIGIT, Rule.APPEND_SPECIAL },
         { Rule.LOWERCASE_ALL, Rule.APPEND_DIGIT, Rule.APPEND_SPECIAL },
-
-
+        
         /* 4. Common symbol suffix / prefix */
         { Rule.LOWERCASE_ALL, Rule.APPEND_SPECIAL },
         { Rule.CAPITALIZE_FIRST, Rule.APPEND_SPECIAL },
         { Rule.LOWERCASE_ALL, Rule.PREPEND_SPECIAL },
 
-        /* 5. Leetspeak (branching replacements) */
+        /* 5. Leetspeak (branching replacements) */ 
         { Rule.LOWERCASE_ALL, Rule.LEET_A },
         { Rule.LOWERCASE_ALL, Rule.LEET_E },
         { Rule.LOWERCASE_ALL, Rule.LEET_O },
         { Rule.LOWERCASE_ALL, Rule.LEET_S },
         { Rule.LEET_A, Rule.LOWERCASE_ALL },
         { Rule.LEET_S, Rule.LOWERCASE_ALL },
-        { Rule.LEET_E, Rule.LOWERCASE_ALL },
+        { Rule.LEET_E, Rule.LOWERCASE_ALL }, 
         { Rule.LEET_O, Rule.LOWERCASE_ALL },
         { Rule.LOWERCASE_ALL, Rule.LEET_A, Rule.LEET_S, Rule.LEET_E, Rule.LEET_O },
         { Rule.LEET_A, Rule.LEET_S, Rule.LEET_E, Rule.LEET_O, Rule.LOWERCASE_ALL },
 
-        /* 6. Case + leet + digit (very common in assignments) */
+        /* 6. Case + leet + digit */
         { Rule.CAPITALIZE_FIRST, Rule.LEET_A, Rule.APPEND_DIGIT },
         { Rule.CAPITALIZE_FIRST, Rule.LEET_S, Rule.APPEND_DIGIT },
+        { Rule.CAPITALIZE_FIRST, Rule.LEET_E, Rule.APPEND_DIGIT },
+        { Rule.CAPITALIZE_FIRST, Rule.LEET_O, Rule.APPEND_DIGIT },
 
         /* 7. Structural edits */
         { Rule.DELETE_FIRST },
@@ -251,36 +241,33 @@ public class bf_jcrypt {
         { Rule.REFLECT_BACK },
         { Rule.REFLECT_BACK, Rule.APPEND_DIGIT },
         { Rule.REFLECT_FRONT, Rule.APPEND_DIGIT },
-
-
+        
         /* 9. Exotic / low probability (kept last) basically I'm just grasping for straws here*/
         { Rule.TOGGLE_CASE, Rule.APPEND_DIGIT },
         { Rule.NCAPITALIZE, Rule.APPEND_SPECIAL },
-
         { Rule.LOWERCASE_ALL, Rule.APPEND_LOWER },
         { Rule.LOWERCASE_ALL, Rule.APPEND_UPPER },
         { Rule.CAPITALIZE_FIRST, Rule.APPEND_LOWER },
         { Rule.CAPITALIZE_FIRST, Rule.APPEND_UPPER },
-
         { Rule.LOWERCASE_ALL, Rule.INSERT_DIGIT },
         { Rule.LOWERCASE_ALL, Rule.INSERT_SPECIAL },
         { Rule.CAPITALIZE_FIRST, Rule.INSERT_DIGIT },
         { Rule.CAPITALIZE_FIRST, Rule.INSERT_SPECIAL },
-
         { Rule.LOWERCASE_ALL, Rule.INSERT_LOWER },
         { Rule.LOWERCASE_ALL, Rule.INSERT_UPPER },
         { Rule.CAPITALIZE_FIRST, Rule.INSERT_LOWER },
         { Rule.CAPITALIZE_FIRST, Rule.INSERT_UPPER },
-        
         { Rule.LOWERCASE_ALL, Rule.PREPEND_LOWER },
         { Rule.LOWERCASE_ALL, Rule.PREPEND_UPPER },
         { Rule.CAPITALIZE_FIRST, Rule.PREPEND_LOWER },
         { Rule.CAPITALIZE_FIRST, Rule.PREPEND_UPPER },
-
     };
 
 
-    /* Parsers */
+    /*
+    Loads password entries from a Unix-style password file.
+    Extracts salt and name components.
+    */
     static List<UserEntry> loadPasswordFile(String filename) throws Exception {
         List<UserEntry> users = new ArrayList<>();
 
@@ -293,13 +280,27 @@ public class bf_jcrypt {
                 UserEntry u = new UserEntry();
                 u.username = parts[0];
                 u.hash = parts[1];
-                u.salt = u.hash.substring(0, 2);
+                u.salt = (u.hash != null && u.hash.length() >= 2) ? u.hash.substring(0, 2) : "";
+
+                if (parts.length > 4 && parts[4] != null && !parts[4].isBlank()) {
+                    String[] nameParts = parts[4].split(" ");
+                    u.firstname = nameParts.length > 0 ? nameParts[0] : "";
+                    u.lastname = nameParts.length > 1 ? nameParts[1] : "";
+                } else {
+                    u.firstname = "";
+                    u.lastname = "";
+                }
 
                 users.add(u);
             }
         }
         return users;
     }
+
+
+    /*
+    Loads dictionary words into memory.
+    */
     static List<String> loadDictionary(String filename) throws Exception {
         List<String> words = new ArrayList<>();
 
@@ -314,7 +315,31 @@ public class bf_jcrypt {
         return words;
     }
 
-    /* Rule Engine (where operator logic lives) */
+
+    /*
+    Extends dictionary with user-specific name variants.
+    */
+    static List<String> addNameDatatoDictionary(UserEntry user, List<String> dictionary) {
+        List<String> extended = new ArrayList<>(dictionary);
+
+        extended.add(user.firstname);
+        extended.add(user.lastname);
+        extended.add(user.firstname + user.lastname);
+        extended.add(user.lastname + user.firstname);
+        extended.add(user.firstname.charAt(0) + user.lastname);
+        extended.add(user.firstname + user.lastname.charAt(0));
+        extended.add(user.lastname.charAt(0) + user.firstname);
+        extended.add(user.lastname + user.firstname.charAt(0));
+
+        return extended;
+    }
+
+
+    /*
+    Applies a single operation to a list of inputs.
+    Some operations generate one result per input,
+    others branch heavily (e.g., charset insertion).
+    */
     static List<String> applyOperationToList(List<String> inputs, Operation op) {
         List<String> outputs = new ArrayList<>();
         switch (op.code) {
@@ -433,30 +458,57 @@ public class bf_jcrypt {
             
             case REPLACE:
                 for (String w : inputs) {
-                    outputs.add(w); // keep original
-                    if (w.indexOf(op.charArg1) >= 0) {
-                        outputs.add(w.replace(op.charArg1, op.charArg2));
-                    }
+                    outputs.addAll(generateLeetVariants(w, op.charArg1, op.charArg2));
                 }
                 break;
 
             default:
                 throw new IllegalStateException("Unknown opcode");
         }
-        // remove any variant that (somehow) exceeds the max length
-        outputs.removeIf(s -> s.length() > MAX_PASS_LEN);
         return outputs;
     }
+
+
+    /*
+    Generates all variants of a word where certain characters are replaced by other certain characters.
+    Produces one variant per occurrence of the character to replace.
+    */
+    static List<String> generateLeetVariants(String word, char from, char to) {
+        List<String> variants = new ArrayList<>();
+        variants.add(word);
+
+        for (int i = 0; i < word.length(); i++) {
+            if (Character.toLowerCase(word.charAt(i)) == Character.toLowerCase(from)) {
+                StringBuilder sb = new StringBuilder(word);
+                sb.setCharAt(i, to);
+                variants.add(sb.toString());
+            }
+        }
+
+        return variants;
+    }
+
+
+    /*
+    Applies a rule (sequence of operations) to a word.
+    Deduplicates results while preserving order.
+    */
     static List<String> applyRule(String word, Rule rule) {
-        // apply the specified rule to the password and return all variants
         List<String> results = new ArrayList<>();
         results.add(word);
+
         for (Operation op: rule.operations) {
             results = applyOperationToList(results, op);
         }
-        // deduplicate while preserving order
+
         return new ArrayList<>(new java.util.LinkedHashSet<>(results));
     }
+
+
+    /*
+    Applies an ordered chain of rules to a base word.
+    Deduplicates between stages to control explosion.
+    */
     static List<String> applyRuleChain(String word, Rule... rules) {
         List<String> results = new ArrayList<>();
         results.add(word);
@@ -466,63 +518,98 @@ public class bf_jcrypt {
             for (String r : results) {
                 next.addAll(applyRule(r, rule));
             }
-            // dedupe between stages
             results = new ArrayList<>(new java.util.LinkedHashSet<>(next));
         }
 
         return results;
     }
 
+    /*
+    Writes a single user's result line and prints a concise console message.
 
-    /* Main Cracking Logic */
-    public static void main(String[] args) throws Exception {
+    Format written to results file:
+      username:password_or_<not found>:time_seconds
+    */
+    private static void writeUserResult(BufferedWriter resultWriter, String username, String foundPassword, double userSeconds) throws Exception {
+        if (foundPassword != null) {
+            resultWriter.write(username + ":" + foundPassword + ":" + String.format("%.3f", userSeconds));
+            resultWriter.newLine();
+            System.out.println("Cracked " + username + " in " + String.format("%.3f", userSeconds) + "s: " + foundPassword);
+        } else {
+            resultWriter.write(username + ":<not found>:" + String.format("%.3f", userSeconds));
+            resultWriter.newLine();
+            System.out.println("Password not found for user: " + username + " (elapsed " + String.format("%.3f", userSeconds) + "s)");
+        }
+    }
+
+
+        /*
+        Main cracking driver.
+
+        Description:
+            - Entry point for the rule-based password cracking program.
+            - Expects two arguments: a Unix-style password file and a dictionary file.
+
+        Flow:
+            1. Validate CLI arguments and create output directory `Results`.
+            2. Load password entries and dictionary words into memory.
+            3. For each user: extend the dictionary with user-specific name variants,
+                 apply ordered rule chains to generate candidate variants, hash each
+                 candidate using `jcrypt.crypt(salt, candidate)`, and compare against
+                 the stored hash.
+            4. Record the found password (or `<not found>`) and the per-user elapsed
+                 time to the results file in the format `username:password:time_seconds`.
+            5. After processing all users, append a summary line and total runtime.
+
+        Output:
+            - Writes results to `Results/<input_filename>_results.txt`.
+            - Summary line contains the number cracked and total elapsed time.
+        */
+        public static void main(String[] args) throws Exception {
 
         if (args.length != 2) {
             System.err.println("Usage: java bf_jcrypt <passwd_file> <dictionary_file>");
-            System.err.println("Example: java bf_jcrypt passwd.txt words.txt");
             System.exit(1);
         }
 
-        // open results file for writing
-        try (BufferedWriter resultWriter = new BufferedWriter(new FileWriter("results.txt"))) {
-            // get password list to crack from args
-            List<UserEntry> users = loadPasswordFile(args[0]);
-            System.out.println("Loaded " + users.size() + " user entries.");
-            // get wordlist path from args
-            List<String> dictionary = loadDictionary(args[1]);
-            System.out.println("Loaded " + dictionary.size() + " dictionary words.");
+        String input_filename = args[0];
+        input_filename = input_filename.substring(0, input_filename.length()-4);
 
-            // for each user in the user list
+        int totalUsers = 0;
+        int crackedUsers = 0;
+
+        new java.io.File("Results").mkdirs();
+
+        try (BufferedWriter resultWriter = new BufferedWriter(new FileWriter("Results/" + input_filename + "_results.txt"))) {
+
+            List<UserEntry> users = loadPasswordFile(args[0]);
+            List<String> dictionary = loadDictionary(args[1]);
+
+            long totalStart = System.nanoTime();
+
             for (UserEntry user : users) {
                 System.out.println("Cracking user: " + user.username);
                 boolean cracked = false;
 
-                // for each candidate in the dictionary
-                for (String candidate : dictionary) {
+                totalUsers++;
 
-                    // for each rule chain in the list of rule chains
+                List<String> extendedDictionary = addNameDatatoDictionary(user, dictionary);
+
+                long userStart = System.nanoTime();
+                String foundPassword = null;
+
+                for (String candidate : extendedDictionary) {
+
                     for (Rule[] chain : RULE_CHAINS) {
 
                         List<String> variants = applyRuleChain(candidate, chain);
 
-                        /* for each candidate variant produced */
                         for (String modifiedCandidate : variants) {
-                            String candidateToHash = modifiedCandidate;
-                            if (candidateToHash.length() > MAX_PASS_LEN) {
-                                candidateToHash = candidateToHash.substring(0, MAX_PASS_LEN);
-                            }
-                            String hashedCandidate = jcrypt.crypt(user.salt, candidateToHash);
+
+                            String hashedCandidate = jcrypt.crypt(user.salt, modifiedCandidate);
 
                             if (hashedCandidate.equals(user.hash)) {
-                                System.out.println(
-                                    "Cracked: " + user.username + " -> " + modifiedCandidate
-                                );
-
-                                resultWriter.write(
-                                    user.username + ":" + modifiedCandidate
-                                );
-                                resultWriter.newLine();
-
+                                foundPassword = modifiedCandidate;
                                 cracked = true;
                                 break;
                             }
@@ -531,15 +618,20 @@ public class bf_jcrypt {
                     }
                     if (cracked) break;
                 }
-                /* catch unbroken passwords */
-                if (!cracked) {
-                    System.out.println(
-                        "[NOT CRACKED] " + user.username
-                    );
-                }
+
+                double userSeconds = (System.nanoTime() - userStart) / 1e9;
+
+                writeUserResult(resultWriter, user.username, foundPassword, userSeconds);
+                if (foundPassword != null) crackedUsers++;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            double totalSeconds = (System.nanoTime() - totalStart) / 1e9;
+
+            System.out.println("Cracked " + crackedUsers + " out of " + totalUsers + " users.");
+            resultWriter.write("Cracked " + crackedUsers + " out of " + totalUsers + " users. (" + (100.0 * crackedUsers / totalUsers) + "%)");
+            resultWriter.newLine();
+            resultWriter.write("Total time: " + String.format("%.3f", totalSeconds) + "s");
+
         }
     }
 }

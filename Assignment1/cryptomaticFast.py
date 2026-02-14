@@ -88,7 +88,7 @@ def main():
         ciphertext = f.read()
 
     dictionary = load_words("Dictionary.txt")
-    common_words = load_words("wordlist.txt")
+    common_words = load_words("wordlist1.txt")
 
     start = time.perf_counter()
     key, plaintext, score = brute_force(ciphertext, dictionary, common_words)

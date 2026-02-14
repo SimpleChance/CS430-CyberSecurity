@@ -1,0 +1,22 @@
+michael:michael:10.377
+abigail:<not found>:10.030
+samantha:amazing:0.376
+tyler:eeffoc:1.820
+alexander:squadro:8.201
+james:icious:9.234
+benjamin:abort6:0.027
+morgan:rdoctor:2.839
+jennifer:doorrood:2.857
+nicole:keyskeys:4.898
+evan:Impact:4.379
+jack:sATCHEL:7.566
+victor:THIRTY:9.059
+caleb:<not found>:10.241
+nathan:<not found>:10.407
+connor:enoggone:4.190
+rachel:obliqu3:6.268
+dustin:<not found>:10.232
+maria:Salizar:9.905
+paige:<not found>:10.368
+Cracked 15 out of 20 users. (75.0%)
+Total time: 133.337s

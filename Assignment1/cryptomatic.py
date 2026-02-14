@@ -164,7 +164,7 @@ def main():
                 input_text = f.read()
 
             dictionary = load_words("Dictionary.txt")  # ~80,000 words
-            common_words = load_words("wordlist.txt")  # 850 words
+            common_words = load_words("wordlist1.txt")  # 850 words
 
             start = time.perf_counter()
             key, decrypted, score = brute_force(input_text, dictionary, common_words)

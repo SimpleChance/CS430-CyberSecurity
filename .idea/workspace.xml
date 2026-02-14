@@ -6,7 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="33cf77e6-b08f-4309-8d91-aaf8b501d550" name="Changes" comment="REAMDME.md added">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment1/cryptomatic.py" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment1/cryptomatic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment1/cryptomaticFast.py" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment1/cryptomaticFast.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment1/wordlist.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment1/wordlist1.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2/bf_jcrypt$OpCode.class" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2/bf_jcrypt$OpCode.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2/bf_jcrypt$Operation.class" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2/bf_jcrypt$Operation.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2/bf_jcrypt$Rule.class" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2/bf_jcrypt$Rule.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2/bf_jcrypt$UserEntry.class" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2/bf_jcrypt$UserEntry.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2/bf_jcrypt.class" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2/bf_jcrypt.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assignment2/bf_jcrypt.java" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2/bf_jcrypt.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2/results.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +75,7 @@
       <recent name="C:\Users\cwjew\Documents\Python Projects\CS430" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.cryptomatic">
     <configuration name="cryptomatic" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CS430" />
       <option name="ENV_FILES" value="" />
