@@ -189,10 +189,7 @@ public class bf_jcrypt {
         { Rule.CAPITALIZE_FIRST, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT },
         { Rule.LOWERCASE_ALL, Rule.PREPEND_DIGIT, Rule.APPEND_DIGIT },
         { Rule.CAPITALIZE_FIRST, Rule.PREPEND_DIGIT, Rule.APPEND_DIGIT },
-        { Rule.LOWERCASE_ALL, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT },
-        { Rule.CAPITALIZE_FIRST, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT },
-        { Rule.LOWERCASE_ALL, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT },
-        { Rule.CAPITALIZE_FIRST, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT },
+
         /* 3b. Reversed + digit suffix */
         { Rule.REVERSE, Rule.APPEND_DIGIT },
         { Rule.REVERSE, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT },
@@ -261,6 +258,14 @@ public class bf_jcrypt {
         { Rule.LOWERCASE_ALL, Rule.PREPEND_UPPER },
         { Rule.CAPITALIZE_FIRST, Rule.PREPEND_LOWER },
         { Rule.CAPITALIZE_FIRST, Rule.PREPEND_UPPER },
+        { Rule.LOWERCASE_ALL, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT },
+        { Rule.CAPITALIZE_FIRST, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT },
+        { Rule.LOWERCASE_ALL, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT },
+        { Rule.CAPITALIZE_FIRST, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT },
+        { Rule.LOWERCASE_ALL, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT },
+        { Rule.CAPITALIZE_FIRST, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT, Rule.APPEND_DIGIT },
+        { Rule.LOWERCASE_ALL, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT },
+        { Rule.CAPITALIZE_FIRST, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT, Rule.PREPEND_DIGIT },
     };
 
 
@@ -598,9 +603,9 @@ public class bf_jcrypt {
                 long userStart = System.nanoTime();
                 String foundPassword = null;
 
-                for (String candidate : extendedDictionary) {
+                for (Rule[] chain : RULE_CHAINS) {
 
-                    for (Rule[] chain : RULE_CHAINS) {
+                    for (String candidate : extendedDictionary) {
 
                         List<String> variants = applyRuleChain(candidate, chain);
 
